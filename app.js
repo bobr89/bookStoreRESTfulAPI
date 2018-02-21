@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
+app.use(express.static(__dirname+'/client'));
 app.use(bodyParser.json());
 
 Genre = require('./models/genre');
@@ -35,10 +36,20 @@ app.post('/api/genre', function(req, res){
 	});
 });
 
-app.put('/api/genre/:_id', function(req, res){
+app.put('/api/genres/:_id', function(req, res){
 	var id = req.params._id;
 	var genre = req.body;
 	Genre.updateGenre(id, genre, {}, function(err, genre){
+		if(err){
+			throw err;
+		}
+		res.json(genre);
+	});
+});
+
+app.delete('/api/genres/:_id', function(req, res){
+	var id = req.params._id;
+	Genre.removeGenre(id, function(err, genre){
 		if(err){
 			throw err;
 		}
@@ -73,6 +84,28 @@ app.post('/api/books', function(req, res){
 		res.json(book);
 	});
 });
+
+app.put('/api/books/:_id', function(req, res){
+	var id = req.params._id;
+	var book = req.body;
+	Book.updateBook(id, book, {}, function(err, book){
+		if(err){
+			throw err;
+		}
+		res.json(book);
+	});
+});
+
+app.delete('/api/books/:_id', function(req, res){
+	var id = req.params._id;
+	Book.removeBook(id, function(err, book){
+		if(err){
+			throw err;
+		}
+		res.json(book);
+	});
+});
+
 
 app.listen(3000);
 console.log('Running on port 3000...')
